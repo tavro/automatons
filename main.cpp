@@ -18,7 +18,7 @@ int main()
 
 	DFA dfa("01", &start_state);
 	dfa.autofill(states);
-	dfa.print(); //TODO: Implement
+	//dfa.printTable(); //TODO: Fix print empty set bug
 	dfa.traverse("01");
 
 	return 0;

@@ -50,7 +50,6 @@ void State::createTransition(char symbol, State* dest_state) {
 int State::getTransitionIndex(char symbol) {
 	for(int i = 0; i < transitions.size(); i++) {
 		char c = transitions[i].getSymbol();
-		//TODO: Figure out why c is nothing
 		if(symbol == c) {
 			return i;
 		}
@@ -64,4 +63,12 @@ State* State::followTransition(char symbol) {
 		return transitions[index].getState();
 	}
 	return nullptr;
+}
+
+int State::getTransitionSize() {
+	return transitions.size();
+}
+
+Transition State::getTransition(int index) {
+	return transitions[index];
 }

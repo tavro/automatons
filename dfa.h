@@ -11,5 +11,10 @@ class DFA {
 		DFA(string alphabet, State* start_state);
 		void autofill(vector<State> states);
 		void traverse(string x);
-		void print();
+		void printTable();
+		void printAlphabet();
+		void printStartStateTransitions();
+		void printStateTransitions(State* state);
+		void printFinalStatesTransitions();
+		void printStatesTransitions();
 };

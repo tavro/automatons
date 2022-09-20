@@ -25,21 +25,61 @@ void DFA::autofill(vector<State> states) {
 
 void DFA::traverse(string x) {
 	State* current_state = _start_state;
-	cout << current_state->getName() << "->";
+	cout << current_state->getName();
 	for(char& c : x) {
 		State* new_current_state = current_state->followTransition(c);
 		if(new_current_state != nullptr) {
 			current_state = new_current_state;
-			if(current_state->getType() == Final) {
-				cout << current_state->getName() << endl;
-			}
-			else {
-				cout << current_state->getName() << "->";
-			}
+			//if(current_state->getType() == Final) {}
+			cout << "->" << current_state->getName();
 		}
+	}
+	cout << endl;
+}
+
+void DFA::printAlphabet() {
+	cout << "         ";
+	for(int i = 0; i < _alphabet.size(); i++) {
+                cout << "    " << _alphabet[i];
+        }
+	cout << endl;
+}
+
+void DFA::printStateTransitions(State* state) {
+	for(int i = 0; i < _alphabet.size(); i++) {
+		cout << "   ";
+		if(state->getTransitionIndex(_alphabet[i]) == -1) {
+                        cout << " ∅";
+                }
+		else {
+			cout << state->getTransition(state->getTransitionIndex(_alphabet[i])).getState()->getName();
+		}
+	}
+	cout << endl;
+}
+
+void DFA::printStartStateTransitions() {
+	cout << "START(" << _start_state->getName() << ")";
+	printStateTransitions(_start_state);
+}
+
+void DFA::printFinalStatesTransitions() {
+	for(int i = 0; i < _final_states.size(); i++) {
+		cout << "FINAL(" << _final_states[i]->getName() << ")";
+		printStateTransitions(_final_states[i]);
 	}
 }
 
-void DFA::print() {
+void DFA::printStatesTransitions() {
+	for(int i = 0; i < _states.size(); i++) {
+		cout << "     (" << _states[i]->getName() << ")";
+		printStateTransitions(_states[i]);
+	}
+}
 
+void DFA::printTable() {
+	printAlphabet();
+	printStartStateTransitions();
+	printFinalStatesTransitions();
+	printStatesTransitions();
 }
