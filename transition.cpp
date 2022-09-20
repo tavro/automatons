@@ -1,4 +1,5 @@
 #include "transition.h"
+#include <iostream>
 
 Transition::Transition(char symbol, State* dest_state) {
 	setSymbol(symbol);

@@ -18,6 +18,8 @@ int main()
 
 	DFA dfa("01", &start_state);
 	dfa.autofill(states);
+	dfa.print(); //TODO: Implement
+	dfa.traverse("01");
 
 	return 0;
 }

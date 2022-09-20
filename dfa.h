@@ -10,4 +10,6 @@ class DFA {
         public:
 		DFA(string alphabet, State* start_state);
 		void autofill(vector<State> states);
+		void traverse(string x);
+		void print();
 };

@@ -14,14 +14,16 @@ class State {
         private:
                 state_type _type;
                 string _name;
-		vector<Transition*> transitions;
+		vector<Transition> transitions;
         public:
                 State(state_type type, string name);
                 void print();
                 void setType(state_type type);
                 void setName(string name);
 		void createTransition(char symbol, State* dest_state);
-		void addTransition(Transition* transition);
+		void addTransition(Transition transition);
+		int getTransitionIndex(char symbol);
+		State* followTransition(char symbol);
                 state_type getType();
                 string getName();
 };
