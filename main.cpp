@@ -2,8 +2,8 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 
-#include "dfa.h"
-#include "circle.h"
+#include "headers/dfa.h"
+#include "headers/circle.h"
 
 void SDL_DrawText(SDL_Renderer *renderer, int x, int y, char* text,
         TTF_Font *font, SDL_Texture **texture, SDL_Rect *rect) {
@@ -66,7 +66,7 @@ int main()
 
 	SDL_Rect rect1, rect2;
         SDL_Texture *texture1, *texture2;
-        TTF_Font *font = TTF_OpenFont("sans.ttf", 16);
+        TTF_Font *font = TTF_OpenFont("fonts/sans.ttf", 16);
         if (font == NULL) {
                 printf("Could not find font \n");
                 return 1;

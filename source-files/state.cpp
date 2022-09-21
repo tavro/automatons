@@ -1,4 +1,4 @@
-#include "state.h"
+#include "../headers/state.h"
 #include <iostream>
 
 State::State(state_type type, string name) {

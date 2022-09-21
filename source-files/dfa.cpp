@@ -1,4 +1,4 @@
-#include "dfa.h"
+#include "../headers/dfa.h"
 #include <iostream>
 
 DFA::DFA(string alphabet, State* start_state) {

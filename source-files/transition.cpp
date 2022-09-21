@@ -1,4 +1,4 @@
-#include "transition.h"
+#include "../headers/transition.h"
 #include <iostream>
 
 Transition::Transition(char symbol, State* dest_state) {
