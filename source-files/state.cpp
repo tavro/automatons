@@ -1,9 +1,12 @@
 #include "../headers/state.h"
 #include <iostream>
 
-State::State(state_type type, string name) {
+State::State(state_type type, string name, int x, int y, int r) {
 	setType(type);
 	setName(name);
+	xPosition = x;
+	yPosition = y;
+	radius = r;
 }
 
 void State::print() {

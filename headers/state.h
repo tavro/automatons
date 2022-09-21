@@ -16,7 +16,10 @@ class State {
                 string _name;
 		vector<Transition> transitions;
         public:
-                State(state_type type, string name);
+		int xPosition;
+		int yPosition;
+		int radius;
+                State(state_type type, string name, int x, int y, int r);
                 void print();
                 void setType(state_type type);
                 void setName(string name);

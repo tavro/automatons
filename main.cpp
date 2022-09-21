@@ -4,10 +4,28 @@
 
 #include "headers/dfa.h"
 #include "headers/state-drawer.h"
-#include "headers/text.h"
 
 int main()
 {
+	State start_state(Start, "q0", 320-64*2, 240, 32);
+        State state(None, "q1", 320, 240, 32);
+        State final_state(Final, "q2", 320+64*2, 240, 32);
+
+        start_state.createTransition('0', &state);
+        state.createTransition('1', &final_state);
+        state.createTransition('1', &start_state);
+        state.createTransition('0', &final_state);
+
+        vector<State*> states;
+        states.push_back(&start_state);
+        states.push_back(&state);
+        states.push_back(&final_state);
+
+        DFA dfa("01", &start_state);
+        dfa.autofill(states);
+        dfa.printTable();
+        dfa.traverse("01");
+
 	SDL_Window *window; 		// declare a pointer
     	SDL_Init(SDL_INIT_VIDEO); 	// initialize SDL2
 	TTF_Init();
@@ -30,9 +48,6 @@ int main()
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 	SDL_RenderClear(renderer);
 	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-	SDL_DrawStartState(renderer, 320-64*2, 240, 32);
-	SDL_DrawState(renderer, 320, 240, 32);
-	SDL_DrawFinalState(renderer, 320+64*2, 240, 32);
 
 	SDL_Rect rect1, rect2, rect3;
         SDL_Texture *texture1, *texture2, *texture3;
@@ -42,9 +57,9 @@ int main()
                 return 1;
         }
 
-	SDL_DrawText(renderer, 320-64*2, 240, "q0", font, &texture3, &rect3);
-	SDL_DrawText(renderer, 320, 240, "q1", font, &texture1, &rect1);
-    	SDL_DrawText(renderer, 320+64*2, 240, "q2", font, &texture2, &rect2);
+	SDL_DrawStartState(renderer, &start_state, font, &texture3, &rect3, "q0");
+        SDL_DrawState(renderer, &state, font, &texture1, &rect1, "q1");
+        SDL_DrawFinalState(renderer, &final_state, font, &texture2, &rect2, "q2");
 
 	SDL_RenderCopy(renderer, texture1, NULL, &rect1);
         SDL_RenderCopy(renderer, texture2, NULL, &rect2);
@@ -60,25 +75,6 @@ int main()
 
     	SDL_DestroyWindow(window);	// destroy window
     	SDL_Quit();			// clean up
-
-	State start_state(Start, "q0");
-	State state(None, "q1");
-	State final_state(Final, "q2");
-
-	start_state.createTransition('0', &state);
-	state.createTransition('1', &final_state);
-	state.createTransition('1', &start_state);
-	state.createTransition('0', &final_state);
-
-	vector<State*> states;
-	states.push_back(&start_state);
-	states.push_back(&state);
-	states.push_back(&final_state);
-
-	DFA dfa("01", &start_state);
-	dfa.autofill(states);
-	dfa.printTable();
-	dfa.traverse("01");
 
 	return 0;
 }
