@@ -8,16 +8,16 @@ DFA::DFA(string alphabet, State* start_state) {
 	_start_state = start_state;
 }
 
-void DFA::autofill(vector<State> states) {
+void DFA::autofill(vector<State*> states) {
 	for(int i = 0; i < states.size(); i++) {
-		switch(states[i].getType()) {
+		switch(states[i]->getType()) {
 			case Start:
 				break;
 			case None:
-				_states.push_back(&states[i]);
+				_states.push_back(states[i]);
 				break;
 			case Final:
-				_final_states.push_back(&states[i]);
+				_final_states.push_back(states[i]);
 				break;
 		}
 	}

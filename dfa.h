@@ -9,7 +9,7 @@ class DFA {
                 State* _start_state;
         public:
 		DFA(string alphabet, State* start_state);
-		void autofill(vector<State> states);
+		void autofill(vector<State*> states);
 		void traverse(string x);
 		void printTable();
 		void printAlphabet();

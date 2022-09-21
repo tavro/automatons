@@ -43,8 +43,13 @@ void State::addTransition(Transition transition) {
 }
 
 void State::createTransition(char symbol, State* dest_state) {
-	Transition transition(symbol, dest_state);
-	addTransition(transition);
+	if(followTransition(symbol) == nullptr) {
+		Transition transition(symbol, dest_state);
+		addTransition(transition);
+	}
+	else {
+		cout << "A DFA is not allowed to have multiple transitions on the same symbol" << endl;
+	}
 }
 
 int State::getTransitionIndex(char symbol) {
