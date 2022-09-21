@@ -60,6 +60,8 @@ int main()
 	SDL_DrawStartState(renderer, &start_state, font, &texture3, &rect3, "q0");
         SDL_DrawState(renderer, &state, font, &texture1, &rect1, "q1");
         SDL_DrawFinalState(renderer, &final_state, font, &texture2, &rect2, "q2");
+	SDL_DrawTransition(renderer, &start_state, &state);
+	SDL_DrawTransition(renderer, &state, &final_state);
 
 	SDL_RenderCopy(renderer, texture1, NULL, &rect1);
         SDL_RenderCopy(renderer, texture2, NULL, &rect2);
