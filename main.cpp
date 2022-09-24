@@ -64,6 +64,9 @@ int main()
 
 	for(int i = 0; i < states.size(); i++) {
 		SDL_RenderCopy(renderer, states[i]->texture, NULL, &states[i]->rect);
+		if(states[i]->getTransition(0) != nullptr) {
+			SDL_RenderCopy(renderer, states[i]->getTransition(0)->texture, NULL, &states[i]->getTransition(0)->rect);
+		}
 	}
 
 	SDL_RenderPresent(renderer);
@@ -71,6 +74,9 @@ int main()
 
 	for(int i = 0; i < states.size(); i++) {
 		SDL_DestroyTexture(states[i]->texture);
+		if(states[i]->getTransition(0) != nullptr) {
+			SDL_DestroyTexture(states[i]->getTransition(0)->texture);
+		}
 	}
     	TTF_Quit();
 

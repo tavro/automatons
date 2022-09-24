@@ -77,6 +77,6 @@ int State::getTransitionSize() {
 	return transitions.size();
 }
 
-Transition State::getTransition(int index) {
-	return transitions[index];
+Transition* State::getTransition(int index) {
+	return &transitions[index];
 }

@@ -30,7 +30,7 @@ class State {
 		void addTransition(Transition transition);
 		int getTransitionIndex(char symbol);
 		int getTransitionSize();
-		Transition getTransition(int index);
+		Transition* getTransition(int index);
 		State* followTransition(char symbol);
                 state_type getType();
                 string getName();

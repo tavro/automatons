@@ -52,7 +52,7 @@ void DFA::printStateTransitions(State* state) {
                         cout << " ∅";
                 }
 		else {
-			cout << state->getTransition(state->getTransitionIndex(_alphabet[i])).getState()->getName();
+			cout << state->getTransition(state->getTransitionIndex(_alphabet[i]))->getState()->getName();
 		}
 	}
 	cout << endl;
