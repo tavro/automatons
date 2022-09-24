@@ -49,30 +49,29 @@ int main()
 	SDL_RenderClear(renderer);
 	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 
-	SDL_Rect rect1, rect2, rect3;
-        SDL_Texture *texture1, *texture2, *texture3;
         TTF_Font *font = TTF_OpenFont("fonts/sans.ttf", 16);
 	if (font == NULL) {
                 printf("Could not find font \n");
                 return 1;
         }
 
-	SDL_DrawStartState(renderer, &start_state, font, &texture3, &rect3, "q0");
-        SDL_DrawState(renderer, &state, font, &texture1, &rect1, "q1");
-        SDL_DrawFinalState(renderer, &final_state, font, &texture2, &rect2, "q2");
-	SDL_DrawTransition(renderer, &start_state, &state);
-	SDL_DrawTransition(renderer, &state, &final_state);
+	SDL_DrawStartState(renderer, &start_state, font, "q0");
+	SDL_DrawState(renderer, &state, font, "q1");
+	SDL_DrawFinalState(renderer, &final_state, font, "q2");
 
-	SDL_RenderCopy(renderer, texture1, NULL, &rect1);
-        SDL_RenderCopy(renderer, texture2, NULL, &rect2);
-	SDL_RenderCopy(renderer, texture3, NULL, &rect3);
+	SDL_DrawTransition(renderer, &start_state, &state, "0", font);
+	SDL_DrawTransition(renderer, &state, &final_state, "1", font);
+
+	for(int i = 0; i < states.size(); i++) {
+		SDL_RenderCopy(renderer, states[i]->texture, NULL, &states[i]->rect);
+	}
 
 	SDL_RenderPresent(renderer);
 	SDL_Delay(5000);		// hold open for 5000 ms
 
-	SDL_DestroyTexture(texture1);
-    	SDL_DestroyTexture(texture2);
-	SDL_DestroyTexture(texture3);
+	for(int i = 0; i < states.size(); i++) {
+		SDL_DestroyTexture(states[i]->texture);
+	}
     	TTF_Quit();
 
     	SDL_DestroyWindow(window);	// destroy window

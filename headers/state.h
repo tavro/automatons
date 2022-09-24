@@ -4,6 +4,7 @@
 #include "transition.h"
 #include <string>
 #include <vector>
+#include <SDL2/SDL.h>
 
 using namespace std;
 
@@ -19,6 +20,8 @@ class State {
 		int xPosition;
 		int yPosition;
 		int radius;
+		SDL_Texture* texture;
+		SDL_Rect rect;
                 State(state_type type, string name, int x, int y, int r);
                 void print();
                 void setType(state_type type);
