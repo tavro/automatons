@@ -5,6 +5,18 @@
 #include "headers/dfa.h"
 #include "headers/state-drawer.h"
 
+void mousePress(SDL_MouseButtonEvent& b){
+	if(b.button == SDL_BUTTON_LEFT){
+		int x, y;
+		SDL_PumpEvents();  // make sure we have the latest mouse state.
+		SDL_GetMouseState(&x, &y);
+		cout << "MouseX:" << x << " MouseY:" << y << endl;
+		if(x > 320-32 && x < 320+32 && y > 240-32 && y < 240 + 32) { //TODO: Remove this, just a test
+			cout << "Collision!" << endl;
+		}
+	}
+}
+
 int main()
 {
 	State start_state(Start, "q0", 320-64*2, 240, 32);
@@ -70,7 +82,22 @@ int main()
 	}
 
 	SDL_RenderPresent(renderer);
-	SDL_Delay(5000);		// hold open for 5000 ms
+
+	bool running = true;
+
+	while(running) {
+		SDL_Event e;
+        	while(SDL_PollEvent(&e)){
+                	switch(e.type){
+                        	case SDL_QUIT:
+                                	running = false;
+                                	break;
+                        	case SDL_MOUSEBUTTONDOWN:
+                                	mousePress(e.button);
+                                	break;
+                	}
+        	}
+	}
 
 	for(int i = 0; i < states.size(); i++) {
 		SDL_DestroyTexture(states[i]->texture);
