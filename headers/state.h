@@ -20,6 +20,7 @@ class State {
 		int xPosition;
 		int yPosition;
 		int radius;
+		bool isSelected;
 		SDL_Texture* texture;
 		SDL_Rect rect;
                 State(state_type type, string name, int x, int y, int r);

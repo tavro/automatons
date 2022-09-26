@@ -16,8 +16,17 @@ void mousePress(SDL_MouseButtonEvent& b, SDL_Renderer* renderer, TTF_Font* font)
 		for(int i = 0; i < states.size(); i++) {
 			int x_pos = states[i]->xPosition;
 			int y_pos = states[i]->yPosition;
-			if(x > x_pos-32 && x < x_pos+32 && y > y_pos-32 && y < y_pos + 32) {
-				cout << "Collision!" << endl; //TODO: Highlight state
+			int radius = states[i]->radius;
+			if(x > x_pos-radius && x < x_pos+radius && y > y_pos-radius && y < y_pos + radius) {
+				cout << "Collision!" << endl;
+
+				SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+				SDL_DrawState(renderer, states[i], font, "qy");
+				SDL_RenderCopy(renderer, states[i]->texture, NULL, &states[i]->rect);
+				SDL_RenderPresent(renderer);
+				SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+
+				states[i]->isSelected = true;
 			}
 		}
 	}
