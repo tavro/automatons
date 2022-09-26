@@ -5,15 +5,30 @@
 #include "headers/dfa.h"
 #include "headers/state-drawer.h"
 
-void mousePress(SDL_MouseButtonEvent& b){
+vector<State*> states;
+
+void mousePress(SDL_MouseButtonEvent& b, SDL_Renderer* renderer, TTF_Font* font){
+	int x, y;
+	SDL_PumpEvents(); // make sure we have latest mouse state
+	SDL_GetMouseState(&x, &y);
+
 	if(b.button == SDL_BUTTON_LEFT){
-		int x, y;
-		SDL_PumpEvents();  // make sure we have the latest mouse state.
-		SDL_GetMouseState(&x, &y);
-		cout << "MouseX:" << x << " MouseY:" << y << endl;
-		if(x > 320-32 && x < 320+32 && y > 240-32 && y < 240 + 32) { //TODO: Remove this, just a test
-			cout << "Collision!" << endl;
+		for(int i = 0; i < states.size(); i++) {
+			int x_pos = states[i]->xPosition;
+			int y_pos = states[i]->yPosition;
+			if(x > x_pos-32 && x < x_pos+32 && y > y_pos-32 && y < y_pos + 32) {
+				cout << "Collision!" << endl; //TODO: Highlight state
+			}
 		}
+	}
+	if(b.button == SDL_BUTTON_RIGHT){
+		cout << "Right Click" << endl;
+		State new_state(None, "qx", x, y, 32);
+		states.push_back(&new_state);
+
+		SDL_DrawState(renderer, states[states.size()-1], font, "qx");
+		SDL_RenderCopy(renderer, states[states.size()-1]->texture, NULL, &states[states.size()-1]->rect);
+		SDL_RenderPresent(renderer);
 	}
 }
 
@@ -28,7 +43,6 @@ int main()
         state.createTransition('1', &start_state);
         state.createTransition('0', &final_state);
 
-        vector<State*> states;
         states.push_back(&start_state);
         states.push_back(&state);
         states.push_back(&final_state);
@@ -93,7 +107,7 @@ int main()
                                 	running = false;
                                 	break;
                         	case SDL_MOUSEBUTTONDOWN:
-                                	mousePress(e.button);
+                                	mousePress(e.button, renderer, font);
                                 	break;
                 	}
         	}
@@ -101,8 +115,10 @@ int main()
 
 	for(int i = 0; i < states.size(); i++) {
 		SDL_DestroyTexture(states[i]->texture);
-		if(states[i]->getTransition(0) != nullptr) {
-			SDL_DestroyTexture(states[i]->getTransition(0)->texture);
+		if(states[i]->getTransitionSize() > 0) {
+			if(states[i]->getTransition(0) != nullptr) {
+				SDL_DestroyTexture(states[i]->getTransition(0)->texture);
+			}
 		}
 	}
     	TTF_Quit();
