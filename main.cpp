@@ -30,16 +30,13 @@ void rerender(SDL_Renderer* renderer, TTF_Font* font) {
 				break;
 		}
 
+		SDL_RenderCopy(renderer, states[i]->texture, NULL, &states[i]->rect);
 		for(int j = 0; j < states[i]->getTransitionSize(); j++) {
 			char symbol = states[i]->getTransition(j)->getSymbol();
 			const char *sym = &symbol;
 			SDL_DrawTransition(renderer, states[i], states[i]->getTransition(j)->getState(), sym, font);
+			SDL_RenderCopy(renderer, states[i]->getTransition(0)->texture, NULL, &states[i]->getTransition(0)->rect);
 		}
-
-		SDL_RenderCopy(renderer, states[i]->texture, NULL, &states[i]->rect);
-                if(states[i]->getTransition(0) != nullptr) {
-                        SDL_RenderCopy(renderer, states[i]->getTransition(0)->texture, NULL, &states[i]->getTransition(0)->rect);
-                }
         }
 
         SDL_RenderPresent(renderer);
