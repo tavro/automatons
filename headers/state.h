@@ -14,7 +14,7 @@ class Transition;
 class State {
         private:
                 state_type _type;
-                string _name;
+		string _name;
 		vector<Transition> transitions;
         public:
 		int xPosition;

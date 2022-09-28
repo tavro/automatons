@@ -1,7 +1,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 
-void SDL_DrawText(SDL_Renderer *renderer, int x, int y, char* text, TTF_Font *font, SDL_Texture **texture, SDL_Rect *rect) {
+void SDL_DrawText(SDL_Renderer *renderer, int x, int y, const char* text, TTF_Font *font, SDL_Texture **texture, SDL_Rect *rect) {
     int text_width;
     int text_height;
     SDL_Surface *surface;

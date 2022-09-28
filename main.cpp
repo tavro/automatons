@@ -6,27 +6,58 @@
 #include "headers/state-drawer.h"
 
 vector<State*> states;
+State start_state(Start, "q0", 320-64*2, 240, 32);
+State state(None, "q1", 320, 240, 32);
+State final_state(Final, "q2", 320+64*2, 240, 32);
 
-void mousePress(SDL_MouseButtonEvent& b, SDL_Renderer* renderer, TTF_Font* font){
+void rerender(SDL_Renderer* renderer, TTF_Font* font) {
+	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+	SDL_RenderClear(renderer);
+        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+
+	SDL_DrawStartState(renderer, &start_state, font, start_state.getName().c_str());
+        SDL_DrawState(renderer, &state, font, state.getName().c_str());
+        SDL_DrawFinalState(renderer, &final_state, font, final_state.getName().c_str());
+
+        SDL_DrawTransition(renderer, &start_state, &state, "0", font);
+        SDL_DrawTransition(renderer, &state, &final_state, "1", font);
+
+	for(int i = 0; i < states.size(); i++) {
+                SDL_RenderCopy(renderer, states[i]->texture, NULL, &states[i]->rect);
+                if(states[i]->getTransition(0) != nullptr) {
+                        SDL_RenderCopy(renderer, states[i]->getTransition(0)->texture, NULL, &states[i]->getTransition(0)->rect);
+                }
+        }
+
+        SDL_RenderPresent(renderer);
+}
+
+void mousePress(SDL_MouseButtonEvent& b, SDL_Renderer* renderer, TTF_Font* font) {
 	int x, y;
 	SDL_PumpEvents(); // make sure we have latest mouse state
 	SDL_GetMouseState(&x, &y);
 
 	if(b.button == SDL_BUTTON_LEFT){
 		for(int i = 0; i < states.size(); i++) {
-			int x_pos = states[i]->xPosition;
-			int y_pos = states[i]->yPosition;
-			int radius = states[i]->radius;
-			if(x > x_pos-radius && x < x_pos+radius && y > y_pos-radius && y < y_pos + radius) {
-				cout << "Collision!" << endl;
+			if(!states[i]->isSelected) {
+				int x_pos = states[i]->xPosition;
+				int y_pos = states[i]->yPosition;
+				int radius = states[i]->radius;
+				if(x > x_pos-radius && x < x_pos+radius && y > y_pos-radius && y < y_pos + radius) {
+					SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+					SDL_DrawState(renderer, states[i], font, states[i]->getName().c_str());
+					SDL_RenderCopy(renderer, states[i]->texture, NULL, &states[i]->rect);
+					SDL_RenderPresent(renderer);
+					SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 
-				SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-				SDL_DrawState(renderer, states[i], font, "qy");
-				SDL_RenderCopy(renderer, states[i]->texture, NULL, &states[i]->rect);
-				SDL_RenderPresent(renderer);
-				SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-
-				states[i]->isSelected = true;
+					states[i]->isSelected = true;
+				}
+			}
+			else {
+				states[i]->xPosition = x;
+				states[i]->yPosition = y;
+				states[i]->isSelected = false;
+				rerender(renderer, font);
 			}
 		}
 	}
@@ -43,10 +74,6 @@ void mousePress(SDL_MouseButtonEvent& b, SDL_Renderer* renderer, TTF_Font* font)
 
 int main()
 {
-	State start_state(Start, "q0", 320-64*2, 240, 32);
-        State state(None, "q1", 320, 240, 32);
-        State final_state(Final, "q2", 320+64*2, 240, 32);
-
         start_state.createTransition('0', &state);
         state.createTransition('1', &final_state);
         state.createTransition('1', &start_state);
@@ -80,9 +107,6 @@ int main()
     	}
 
 	SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-	SDL_RenderClear(renderer);
-	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 
         TTF_Font *font = TTF_OpenFont("fonts/sans.ttf", 16);
 	if (font == NULL) {
@@ -90,24 +114,9 @@ int main()
                 return 1;
         }
 
-	SDL_DrawStartState(renderer, &start_state, font, "q0");
-	SDL_DrawState(renderer, &state, font, "q1");
-	SDL_DrawFinalState(renderer, &final_state, font, "q2");
-
-	SDL_DrawTransition(renderer, &start_state, &state, "0", font);
-	SDL_DrawTransition(renderer, &state, &final_state, "1", font);
-
-	for(int i = 0; i < states.size(); i++) {
-		SDL_RenderCopy(renderer, states[i]->texture, NULL, &states[i]->rect);
-		if(states[i]->getTransition(0) != nullptr) {
-			SDL_RenderCopy(renderer, states[i]->getTransition(0)->texture, NULL, &states[i]->getTransition(0)->rect);
-		}
-	}
-
-	SDL_RenderPresent(renderer);
+	rerender(renderer, font);
 
 	bool running = true;
-
 	while(running) {
 		SDL_Event e;
         	while(SDL_PollEvent(&e)){
