@@ -72,8 +72,9 @@ void mousePress(SDL_MouseButtonEvent& b, SDL_Renderer* renderer, TTF_Font* font)
 		}
 	}
 	if(b.button == SDL_BUTTON_RIGHT){
-		State new_state(None, "qx", x, y, 32);
-		states.push_back(&new_state);
+		string num = to_string(states.size());
+		State* new_state = new State(None, "q" + num, x, y, 32);
+		states.push_back(new_state);
 		rerender(renderer, font);
 	}
 }
@@ -87,10 +88,12 @@ int main()
         states.push_back(&state);
         states.push_back(&final_state);
 
+	/*
         DFA dfa("01", &start_state);
         dfa.autofill(states);
         dfa.printTable();
         dfa.traverse("01");
+	*/
 
 	SDL_Window *window; 		// declare a pointer
     	SDL_Init(SDL_INIT_VIDEO); 	// initialize SDL2
