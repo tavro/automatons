@@ -15,8 +15,8 @@ void rerender(SDL_Renderer* renderer, TTF_Font* font) {
 	SDL_RenderClear(renderer);
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 
-        SDL_DrawTransition(renderer, &start_state, &state, "0", font);
-        SDL_DrawTransition(renderer, &state, &final_state, "1", font);
+        //SDL_DrawTransition(renderer, &start_state, &state, "0", font);
+        //SDL_DrawTransition(renderer, &state, &final_state, "1", font);
 
 	for(int i = 0; i < states.size(); i++) {
                 switch(states[i]->getType()) {
@@ -31,6 +31,10 @@ void rerender(SDL_Renderer* renderer, TTF_Font* font) {
 				break;
 			default:
 				break;
+		}
+
+		for(int j = 0; j < states[i]->getTransitionSize(); j++) {
+			SDL_DrawTransition(renderer, states[i], states[i]->getTransition(j)->getState(), "x"/*states[i]->getTransition(j)->getSymbol()*/, font);
 		}
 
 		SDL_RenderCopy(renderer, states[i]->texture, NULL, &states[i]->rect);
@@ -82,7 +86,9 @@ void mousePress(SDL_MouseButtonEvent& b, SDL_Renderer* renderer, TTF_Font* font)
 int main()
 {
         start_state.createTransition('0', &state);
-        state.createTransition('1', &final_state);
+
+	state.createTransition('1', &final_state);
+	state.createTransition('0', &start_state);
 
         states.push_back(&start_state);
         states.push_back(&state);

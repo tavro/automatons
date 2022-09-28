@@ -4,8 +4,16 @@
 
 void SDL_DrawArrow(SDL_Renderer* renderer, int startX, int startY, int endX, int endY);
 void SDL_DrawTransition(SDL_Renderer* renderer, State* state, State* otherState, char* symbol, TTF_Font *font) {
-	int startX = state->xPosition + state->radius;
-	int endX = otherState->xPosition - otherState->radius;
+	int startX, endX;
+	if (state->xPosition < otherState->xPosition) {
+		startX = state->xPosition + state->radius;
+		endX = otherState->xPosition - otherState->radius;
+	}
+	else {
+		startX = state->xPosition - state->radius;
+		endX = otherState->xPosition + otherState->radius;
+	}
+
 	SDL_DrawArrow(renderer, startX, state->yPosition, endX, otherState->yPosition);
 	int xMiddle = (startX + endX)/2;
 	int yMiddle = (state->yPosition + otherState->yPosition)/2;
@@ -15,8 +23,16 @@ void SDL_DrawTransition(SDL_Renderer* renderer, State* state, State* otherState,
 void SDL_DrawArrow(SDL_Renderer* renderer, int startX, int startY, int endX, int endY) {
 	SDL_RenderDrawLine(renderer, startX, startY, endX, endY);
 
-	SDL_RenderDrawLine(renderer, endX-16, endY+16, endX, endY);
-	SDL_RenderDrawLine(renderer, endX-16, endY-16, endX, endY);
+	int newEndX;
+	if(startX < endX) {
+		newEndX = endX-16;
+	}
+	else {
+		newEndX = endX+16;
+	}
+
+	SDL_RenderDrawLine(renderer, newEndX, endY+16, endX, endY);
+	SDL_RenderDrawLine(renderer, newEndX, endY-16, endX, endY);
 }
 
 void SDL_DrawState(SDL_Renderer* renderer, State* state, TTF_Font *font, const char* text) {
