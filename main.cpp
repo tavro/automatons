@@ -15,15 +15,25 @@ void rerender(SDL_Renderer* renderer, TTF_Font* font) {
 	SDL_RenderClear(renderer);
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 
-	SDL_DrawStartState(renderer, &start_state, font, start_state.getName().c_str());
-        SDL_DrawState(renderer, &state, font, state.getName().c_str());
-        SDL_DrawFinalState(renderer, &final_state, font, final_state.getName().c_str());
-
         SDL_DrawTransition(renderer, &start_state, &state, "0", font);
         SDL_DrawTransition(renderer, &state, &final_state, "1", font);
 
 	for(int i = 0; i < states.size(); i++) {
-                SDL_RenderCopy(renderer, states[i]->texture, NULL, &states[i]->rect);
+                switch(states[i]->getType()) {
+			case Start:
+				SDL_DrawStartState(renderer, states[i], font, states[i]->getName().c_str());
+				break;
+			case None:
+				SDL_DrawState(renderer, states[i], font, states[i]->getName().c_str());
+				break;
+			case Final:
+				SDL_DrawFinalState(renderer, states[i], font, states[i]->getName().c_str());
+				break;
+			default:
+				break;
+		}
+
+		SDL_RenderCopy(renderer, states[i]->texture, NULL, &states[i]->rect);
                 if(states[i]->getTransition(0) != nullptr) {
                         SDL_RenderCopy(renderer, states[i]->getTransition(0)->texture, NULL, &states[i]->getTransition(0)->rect);
                 }
@@ -62,13 +72,9 @@ void mousePress(SDL_MouseButtonEvent& b, SDL_Renderer* renderer, TTF_Font* font)
 		}
 	}
 	if(b.button == SDL_BUTTON_RIGHT){
-		cout << "Right Click" << endl;
 		State new_state(None, "qx", x, y, 32);
 		states.push_back(&new_state);
-
-		SDL_DrawState(renderer, states[states.size()-1], font, "qx");
-		SDL_RenderCopy(renderer, states[states.size()-1]->texture, NULL, &states[states.size()-1]->rect);
-		SDL_RenderPresent(renderer);
+		rerender(renderer, font);
 	}
 }
 
@@ -76,8 +82,6 @@ int main()
 {
         start_state.createTransition('0', &state);
         state.createTransition('1', &final_state);
-        state.createTransition('1', &start_state);
-        state.createTransition('0', &final_state);
 
         states.push_back(&start_state);
         states.push_back(&state);
