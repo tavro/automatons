@@ -3,20 +3,22 @@
 #include "state.h"
 
 void SDL_DrawArrow(SDL_Renderer* renderer, int startX, int startY, int endX, int endY);
-void SDL_DrawTransition(SDL_Renderer* renderer, State* state, State* otherState, char* symbol, TTF_Font *font) {
-	int startX, endX;
+void SDL_DrawTransition(SDL_Renderer* renderer, State* state, State* otherState, const char* symbol, TTF_Font *font) {
+	int startX, endX, yOffset;
 	if (state->xPosition < otherState->xPosition) {
 		startX = state->xPosition + state->radius;
 		endX = otherState->xPosition - otherState->radius;
+		yOffset = 16;
 	}
 	else {
 		startX = state->xPosition - state->radius;
 		endX = otherState->xPosition + otherState->radius;
+		yOffset = -16;
 	}
 
-	SDL_DrawArrow(renderer, startX, state->yPosition, endX, otherState->yPosition);
+	SDL_DrawArrow(renderer, startX, state->yPosition + yOffset, endX, otherState->yPosition + yOffset);
 	int xMiddle = (startX + endX)/2;
-	int yMiddle = (state->yPosition + otherState->yPosition)/2;
+	int yMiddle = (state->yPosition + otherState->yPosition + yOffset*2)/2;
 	SDL_DrawText(renderer, xMiddle, yMiddle, symbol, font, &state->getTransition(0)->texture, &state->getTransition(0)->rect);
 }
 
